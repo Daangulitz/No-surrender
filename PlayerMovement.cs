@@ -20,9 +20,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
+    private bool wasGrounded;
+
     private void Update()
-    {   
-        
+    {
         if (isDashing)
         {
             return;
@@ -41,13 +42,25 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-            animator.SetBool("IsJumping", false);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(Dash());
         }
+
+        // Check if the player has landed
+        bool isGrounded = IsGrounded();
+        if (wasGrounded && !isGrounded)
+        {
+            animator.SetBool("IsJumping", true);
+        }
+        else if (!wasGrounded && isGrounded)
+        {
+            animator.SetBool("IsJumping", false);
+        }
+
+        wasGrounded = isGrounded;
 
         Flip();
     }
