@@ -95,12 +95,14 @@ public class PlayerMovement : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        animator.SetBool("IsDashing", true);
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 2f;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
         yield return new WaitForSeconds(dashingTime);
         rb.gravityScale = originalGravity;
         isDashing = false;
+        animator.SetBool("IsDashing", false);
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
     }
